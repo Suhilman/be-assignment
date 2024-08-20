@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Uplzz007
+      POSTGRES_DB: concretedb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  account-manager:
+    build:
+      context: ./account-manager
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:Uplzz007@db:5433/concretedb?schema=public
+
+  payment-manager:
+    build:
+      context: ./payment-manager
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:Uplzz007@db:5433/concretedb?schema=public
+
+volumes:
+  db-data:
